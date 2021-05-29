@@ -14,7 +14,7 @@ b_frames = os.path.join(wd,"0-big_frames")
 s_frames = os.path.join(wd,"1-small_frames")
 s_text = os.path.join(wd,"2-small_text")
 out_loc = os.path.join(wd, "3-output_file")
-out_file = os.path.join(os.path.join(out_loc, "output"),"output.ino")
+out_file = os.path.join(os.path.join(out_loc, "output"),"output.py")
 
 if not os.path.exists(b_frames):
     os.makedirs(b_frames)
@@ -98,16 +98,17 @@ for frame in sorted(os.listdir(s_frames)):
             f.close()
 # ==========
 print("DONE converting. (2/2)\n")
-print("Building .ino file in "+out_loc)
+print("Building .py file in "+out_loc)
 # Building
 f = open(out_file,"w")
-f.write("#include <LiquidCrystal.h>\n")
-f.write("const int RS = 11, EN = 12, D4 = 2, D5 = 3, D6 = 4, D7 = 5;\n")
-f.write("LiquidCrystal lcd(RS, EN, D4, D5, D6, D7);\n")
+f.write("from RPLCD.gpio import CharLCD")
+f.write("from RPi import GPIO\n")
+f.write("import time\n")
+f.write("lcd = CharLCD(pin_rs=37,  pin_e=35,pins_data=[40, 38, 36, 32, 33, 31, 29, 23],\nnumbering_mode=GPIO.BOARD,\ncols=16, rows=2, dotsize=8,\ncharmap='A02',\nauto_linebreaks=True)")
 # b arrays
 for bfile in sorted(os.listdir(s_text)):
     bpos = 0
-    f.write("byte b"+bfile[0:len(bfile)-4]+"[8] = {\n")
+    f.write("b"+bfile[0:len(bfile)-4]+" = (\n")
     for bline in open(os.path.join(s_text,bfile),'r'):
         bpos = bpos + 1
         if len(bline) <= 6:
@@ -119,38 +120,38 @@ for bfile in sorted(os.listdir(s_text)):
                 print("TOO MANY LINES IN "+os.path.join(s_text,bfile)+" ("+str(bpos)+")")
         else:
             print("LINES TOO SHORT OR LONG IN "+os.path.join(s_text,bfile)+" AT LINE "+str(bpos)+" LENGTH "+str(len(bline)-1)+" INSTEAD OF 5")
-    f.write("};\n")
+    f.write(")\n")
 # setup
-f.write("void setup() { lcd.begin(16,2); }\n")
+#f.write("void setup() { lcd.begin(16,2); }\n")
 # loop
-f.write("void loop() {\n")
+#f.write("void loop() {\n")
 # writes
 lcd_pos = 0
 for bfile in sorted(os.listdir(s_text)):
     if lcd_pos == 0:
-        f.write("lcd.createChar(0, b"+bfile[0:len(bfile)-5]+"A);\n")
-        f.write("lcd.createChar(1, b"+bfile[0:len(bfile)-5]+"B);\n")
-        f.write("lcd.createChar(2, b"+bfile[0:len(bfile)-5]+"C);\n")
-        f.write("lcd.createChar(3, b"+bfile[0:len(bfile)-5]+"D);\n")
-        f.write("lcd.createChar(4, b"+bfile[0:len(bfile)-5]+"E);\n")
-        f.write("lcd.createChar(5, b"+bfile[0:len(bfile)-5]+"F);\n")
-        f.write("lcd.createChar(6, b"+bfile[0:len(bfile)-5]+"G);\n")
-        f.write("lcd.createChar(7, b"+bfile[0:len(bfile)-5]+"H);\n")
-        f.write("delay(200);\n")
-        f.write("lcd.setCursor(0,0);\n")
-        f.write("lcd.write((byte)0);\n")
+        f.write("lcd.create_char(0, b"+bfile[0:len(bfile)-5]+"A)\n")
+        f.write("lcd.create_char(1, b"+bfile[0:len(bfile)-5]+"B)\n")
+        f.write("lcd.create_char(2, b"+bfile[0:len(bfile)-5]+"C)\n")
+        f.write("lcd.create_char(3, b"+bfile[0:len(bfile)-5]+"D)\n")
+        f.write("lcd.create_char(4, b"+bfile[0:len(bfile)-5]+"E)\n")
+        f.write("lcd.create_char(5, b"+bfile[0:len(bfile)-5]+"F)\n")
+        f.write("lcd.create_char(6, b"+bfile[0:len(bfile)-5]+"G)\n")
+        f.write("lcd.create_char(7, b"+bfile[0:len(bfile)-5]+"H)\n")
+        f.write("time.sleep(0.1)\n")
+        f.write("lcd.cursor_pos = (0,0)\n")
+        f.write("lcd.write_string((byte)0)\n")
     elif lcd_pos < 4:
-        f.write("lcd.setCursor("+str(lcd_pos)+", 0);\n")
-        f.write("lcd.write((byte)"+str(lcd_pos)+");\n")
+        f.write("lcd.cursor_pos = ("+str(lcd_pos)+", 0)\n")
+        f.write("lcd.write_string(unichar("+str(lcd_pos)+"))\n")
     else:
-        f.write("lcd.setCursor("+str(lcd_pos-4)+", 1);\n")
-        f.write("lcd.write((byte)"+str(lcd_pos)+");\n")
+        f.write("lcd.cursor_pos("+str(lcd_pos-4)+", 1);\n")
+        f.write("lcd.write_string(unichar("+str(lcd_pos)+"))\n")
     if lcd_pos >= 7:
         lcd_pos = 0
     else:
         lcd_pos = lcd_pos + 1
 # end
-f.write("}")
+#f.write("}")
 f.close()
 # ==========
 print("DONE building file. The file you're looking for is "+out_file)
