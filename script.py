@@ -124,28 +124,28 @@ for bfile in sorted(os.listdir(s_text)):
 # setup
 #f.write("void setup() { lcd.begin(16,2); }\n")
 # loop
-#f.write("void loop() {\n")
+f.write("while True:\n")
 # writes
 lcd_pos = 0
 for bfile in sorted(os.listdir(s_text)):
     if lcd_pos == 0:
-        f.write("lcd.create_char(0, b"+bfile[0:len(bfile)-5]+"A)\n")
-        f.write("lcd.create_char(1, b"+bfile[0:len(bfile)-5]+"B)\n")
-        f.write("lcd.create_char(2, b"+bfile[0:len(bfile)-5]+"C)\n")
-        f.write("lcd.create_char(3, b"+bfile[0:len(bfile)-5]+"D)\n")
-        f.write("lcd.create_char(4, b"+bfile[0:len(bfile)-5]+"E)\n")
-        f.write("lcd.create_char(5, b"+bfile[0:len(bfile)-5]+"F)\n")
-        f.write("lcd.create_char(6, b"+bfile[0:len(bfile)-5]+"G)\n")
-        f.write("lcd.create_char(7, b"+bfile[0:len(bfile)-5]+"H)\n")
-        f.write("time.sleep(0.01)\n")
-        f.write("lcd.cursor_pos = (0,0)\n")
-        f.write("lcd.write_string(unichr(0))\n")
+        f.write("  lcd.create_char(0, b"+bfile[0:len(bfile)-5]+"A)\n")
+        f.write("  lcd.create_char(1, b"+bfile[0:len(bfile)-5]+"B)\n")
+        f.write("  lcd.create_char(2, b"+bfile[0:len(bfile)-5]+"C)\n")
+        f.write("  lcd.create_char(3, b"+bfile[0:len(bfile)-5]+"D)\n")
+        f.write("  lcd.create_char(4, b"+bfile[0:len(bfile)-5]+"E)\n")
+        f.write("  lcd.create_char(5, b"+bfile[0:len(bfile)-5]+"F)\n")
+        f.write("  lcd.create_char(6, b"+bfile[0:len(bfile)-5]+"G)\n")
+        f.write("  lcd.create_char(7, b"+bfile[0:len(bfile)-5]+"H)\n")
+        f.write("  time.sleep(0.001)\n")
+        f.write("  lcd.cursor_pos = (0,0)\n")
+        f.write("  lcd.write_string(unichr(0))\n")
     elif lcd_pos < 4:
-        f.write("lcd.cursor_pos = (0,"+str(lcd_pos)+")\n")
-        f.write("lcd.write_string(unichr("+str(lcd_pos)+"))\n")
+        f.write("  lcd.cursor_pos = (0,"+str(lcd_pos)+")\n")
+        f.write("  lcd.write_string(unichr("+str(lcd_pos)+"))\n")
     else:
-        f.write("lcd.cursor_pos = (1,"+str(lcd_pos-4)+");\n")
-        f.write("lcd.write_string(unichr("+str(lcd_pos)+"))\n")
+        f.write("  lcd.cursor_pos = (1,"+str(lcd_pos-4)+");\n")
+        f.write("  lcd.write_string(unichr("+str(lcd_pos)+"))\n")
     if lcd_pos >= 7:
         lcd_pos = 0
     else:
