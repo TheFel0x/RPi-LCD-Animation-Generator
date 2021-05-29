@@ -101,10 +101,10 @@ print("DONE converting. (2/2)\n")
 print("Building .py file in "+out_loc)
 # Building
 f = open(out_file,"w")
-f.write("from RPLCD.gpio import CharLCD")
+f.write("from RPLCD.gpio import CharLCD\n")
 f.write("from RPi import GPIO\n")
 f.write("import time\n")
-f.write("lcd = CharLCD(pin_rs=37,  pin_e=35,pins_data=[40, 38, 36, 32, 33, 31, 29, 23],\nnumbering_mode=GPIO.BOARD,\ncols=16, rows=2, dotsize=8,\ncharmap='A02',\nauto_linebreaks=True)")
+f.write("lcd = CharLCD(pin_rs=37,  pin_e=35,pins_data=[40, 38, 36, 32, 33, 31, 29, 23],\nnumbering_mode=GPIO.BOARD,\ncols=16, rows=2, dotsize=8,\ncharmap='A02',\nauto_linebreaks=True)\n")
 # b arrays
 for bfile in sorted(os.listdir(s_text)):
     bpos = 0
@@ -137,15 +137,15 @@ for bfile in sorted(os.listdir(s_text)):
         f.write("lcd.create_char(5, b"+bfile[0:len(bfile)-5]+"F)\n")
         f.write("lcd.create_char(6, b"+bfile[0:len(bfile)-5]+"G)\n")
         f.write("lcd.create_char(7, b"+bfile[0:len(bfile)-5]+"H)\n")
-        f.write("time.sleep(0.1)\n")
+        f.write("time.sleep(0.01)\n")
         f.write("lcd.cursor_pos = (0,0)\n")
-        f.write("lcd.write_string((byte)0)\n")
+        f.write("lcd.write_string(unichr(0))\n")
     elif lcd_pos < 4:
-        f.write("lcd.cursor_pos = ("+str(lcd_pos)+", 0)\n")
-        f.write("lcd.write_string(unichar("+str(lcd_pos)+"))\n")
+        f.write("lcd.cursor_pos = (0,"+str(lcd_pos)+")\n")
+        f.write("lcd.write_string(unichr("+str(lcd_pos)+"))\n")
     else:
-        f.write("lcd.cursor_pos("+str(lcd_pos-4)+", 1);\n")
-        f.write("lcd.write_string(unichar("+str(lcd_pos)+"))\n")
+        f.write("lcd.cursor_pos = (1,"+str(lcd_pos-4)+");\n")
+        f.write("lcd.write_string(unichr("+str(lcd_pos)+"))\n")
     if lcd_pos >= 7:
         lcd_pos = 0
     else:
