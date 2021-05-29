@@ -2,6 +2,13 @@ import os
 from PIL import Image
 from wand.image import Image as wandImg
 
+# TODO:
+#   - support video files
+#   - Arduino -> RPi
+#   - .ino -> .py
+#   - tempfile
+#   - args
+
 wd = os.path.realpath(__file__)[0:len(os.path.realpath(__file__))-9]
 b_frames = os.path.join(wd,"0-big_frames")
 s_frames = os.path.join(wd,"1-small_frames")
