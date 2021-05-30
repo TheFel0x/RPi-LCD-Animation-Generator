@@ -4,8 +4,6 @@ from wand.image import Image as wandImg
 
 # TODO:
 #   - support video files
-#   - Arduino -> RPi
-#   - .ino -> .py
 #   - tempfile
 #   - args
 
