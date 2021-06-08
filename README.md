@@ -6,4 +6,4 @@ I orignally made it for [Arduino](https://github.com/TheFel0x/Arduino-LCD-Animat
 This is an improved version.
 
 # Example
-(will be added soon! )
+![out](https://user-images.githubusercontent.com/43345523/121209732-6373d400-c87b-11eb-97b5-ba0ebf18a3e1.gif)
